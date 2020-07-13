@@ -1,6 +1,8 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Auth\AuthenticationException;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,5 +20,8 @@ Route::get('/', function () {
 });
 
 Route::get('/projects', 'ProjectsController@index');
+Route::get('projects/{project}', 'ProjectsController@show');
+Route::post('/projects', 'ProjectsController@store')->middleware('auth');
+Auth::routes();
 
-Route::post('/projects', 'ProjectsController@store');
+Route::get('/home', 'HomeController@index')->name('home');
