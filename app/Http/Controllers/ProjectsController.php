@@ -2,25 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProjectRequest;
 use App\Project;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ProjectsController extends Controller
 {
     public function index()
     {
-        $projects = Project::all();
-
+        $projects = auth()->user()->projects;
         return view('projects.index', compact('projects'));
     }
 
-    public function show()
+    public function create()
     {
-        $project = Project::findOrFail(request('project'));
+        return view('projects.create');
+    }
+
+    public function show(Project $project)
+    {
+        if (auth()->user()->isNot($project->owner)) {
+            abort(403, 'Unauthorized action.');
+        }
+        // $project = Project::findOrFail(request('project'));
 
         return view('projects.show', compact('project'));
     }
+
 
     public function store()
     {
@@ -29,10 +37,8 @@ class ProjectsController extends Controller
             'description' => 'required'
         ]);
 
-        auth()->user()->projects()->create($attributes);
-        // persist
+        $project = auth()->user()->projects()->create($attributes);
 
-        //redirect
         return redirect('/projects');
     }
 }

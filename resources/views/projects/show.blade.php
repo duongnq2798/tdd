@@ -1,13 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title></title>
-</head>
-<body>
-  <h1> {{ $project->title }} </h1>
-  <div> {{$project->description}} </div>
-</body>
-</html>
+@extends('layouts.app')
+
+@section('content')
+  <header class="flex items-center mb-3 py-4">
+    <div class="flex justify-between items-end w-full">
+      <p class="font-semibold text-grey text-lg mb-3">
+        <a class="text-gray-600" href="/projects">My Projects</a> / {{ $project->title }}
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <div class="lg:flex">
+      <div class="lg:w-3/4 px-3">
+        <div class=" mb-6">
+          <h2 class="font-semibold text-grey text-lg mb-3">Tasks</h2>
+          <div class="rounded-lg shadow py-4 pl-3 mb-3 ">Lorem</div>
+          <div class="rounded-lg shadow py-4 pl-3 mb-3 ">Lorem</div>
+          <div class="rounded-lg shadow py-4 pl-3 mb-3 ">Lorem</div>
+          <div class="rounded-lg shadow py-4 pl-3 mb-3">Lorem</div>
+        </div>
+        {{-- tasks --}}
+        <div>
+          <h2 class="font-semibold text-grey  text-lg mb-3">General Notes</h2>
+          <textarea class=" w-full rounded-lg shadow py-3 pl-3" style="min-height: 200px">Note here...</textarea>
+        </div>
+      </div>
+
+      <div class="lg:w-1/4 px-3">
+          @include('projects.card')
+      </div>
+    </div>
+  </main>
+  
+@endsection
+
