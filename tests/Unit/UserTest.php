@@ -11,6 +11,7 @@ class UserTest extends TestCase
 {
     use RefreshDatabase;
     /** @test */
+    // Một người dùng có dự án
     public function a_user_has_projects()
     {
         $this->withoutMiddleware();
