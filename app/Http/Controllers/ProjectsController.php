@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateProjectRequest;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -21,23 +20,33 @@ class ProjectsController extends Controller
 
     public function show(Project $project)
     {
-        if (auth()->user()->isNot($project->owner)) {
-            abort(403, 'Unauthorized action.');
-        }
+        $this->authorize('update', $project);
+        // if (auth()->user()->isNot($project->owner)) {
+        //     abort(403, 'Unauthorized action.');
+        // }
         // $project = Project::findOrFail(request('project'));
 
         return view('projects.show', compact('project'));
     }
 
-
     public function store()
     {
         $attributes = request()->validate([
             'title' => 'required',
-            'description' => 'required'
+            'description' => 'required|max:100',
+            'notes' => 'min:3',
         ]);
 
         $project = auth()->user()->projects()->create($attributes);
+
+        return redirect($project->path());
+    }
+
+    public function update(Project $project)
+    {
+        $this->authorize('update', $project);
+
+        $project->update(request(['notes']));
 
         return redirect($project->path());
     }

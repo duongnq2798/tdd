@@ -6,6 +6,7 @@ use App\Project;
 use Facades\Tests\Setup\ProjectFactory;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use ProjectFactory as GlobalProjectFactory;
 
 class ProjectTasksTest extends TestCase
 {
@@ -67,15 +68,13 @@ class ProjectTasksTest extends TestCase
     function a_task_can_be_updated()
     {
         $this->withoutExceptionHandling();
-        $this->signIn();
 
-        $project = auth()->user()->projects()->create(
-            factory(Project::class)->raw()
-        );
+        $project = app(ProjectFactory::class)
+            ->ownerBy($this->signIn())
+            ->withTasks(1)
+            ->create();
 
-        $task = $project->addTask('test task');
-
-        $this->patch($project->path() . '/tasks/' . $task->id, [
+        $this->patch($project->path() . '/tasks/' . $project->task[0]->id, [
             'body' => 'changed',
             'completed' => true
         ]);
