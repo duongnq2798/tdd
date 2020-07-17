@@ -6,7 +6,9 @@ use App\Project;
 use Facades\Tests\Setup\ProjectFactory;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use ProjectFactory as GlobalProjectFactory;
+
+// use Illuminate\Foundation\Testing\RefreshDatabase;
+// use Tests\Setup\ProjectFactory as SetupProjectFactory;
 
 class ProjectTasksTest extends TestCase
 {
@@ -28,8 +30,8 @@ class ProjectTasksTest extends TestCase
 
         $project = factory('App\Project')->create();
 
-        $this->post($project->path() . './tasks', ['body' => 'Test task'])
-            ->assertStatus(404);
+        $this->post($project->path() . '/tasks', ['body' => 'Test task'])
+            ->assertStatus(403);
         $this->assertDatabaseMissing('tasks', ['body' => 'Test task']);
     }
 
@@ -39,27 +41,29 @@ class ProjectTasksTest extends TestCase
     {
         $this->signIn();
 
-        $project = factory('App\Project')->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
-        $task =  $project->addTask('test task');
+        $this->patch($project->tasks[0]->path(), ['body' => 'changed'])
+            ->assertStatus(403);
 
-        $this->patch($task->path(), ['body' => 'changed'])
-            ->assertStatus(404);
-        $this->assertDatabaseMissing('tasks', ['body' => 'Test task']);
+        $this->assertDatabaseMissing('tasks', ['body' => 'changed']);
     }
 
     /** @test */
-    // một dự án có thể có nhiệm vụ
+    // Một dự án có thể có nhiệm vụ
     public function a_project_can_have_tasks()
     {
-        $this->signIn();
+        // $this->signIn();
 
-        $project = auth()->user()->projects()->create(
-            factory(Project::class)->raw()
-        );
+        // $project = auth()->user()->projects()->create(
+        //     factory(Project::class)->raw()
+        // );
+        $project = ProjectFactory::create();
 
 
-        $this->post($project->path() . '/tasks', ['body' => 'Test task']);
+        $this->actingAs($project->owner)
+            ->post($project->path() . '/tasks', ['body' => 'Test task']);
+
         $this->get($project->path())
             ->assertSee('Test task');
     }
@@ -67,17 +71,14 @@ class ProjectTasksTest extends TestCase
     //  một nhiệm vụ có thể được cập nhật
     function a_task_can_be_updated()
     {
-        $this->withoutExceptionHandling();
 
-        $project = app(ProjectFactory::class)
-            ->ownerBy($this->signIn())
-            ->withTasks(1)
-            ->create();
+        $project = ProjectFactory::withTasks(1)->create();
 
-        $this->patch($project->path() . '/tasks/' . $project->task[0]->id, [
-            'body' => 'changed',
-            'completed' => true
-        ]);
+        $this->actingAs($project->owner)
+            ->patch($project->tasks[0]->path(), [
+                'body' => 'changed',
+                'completed' => true
+            ]);
 
         $this->assertDatabaseHas('tasks', [
             'body' => 'changed',
@@ -89,14 +90,12 @@ class ProjectTasksTest extends TestCase
     // Mỗi Task sẽ yêu cầu Body
     public function a_task_requires_a_body()
     {
-        $this->signIn();
-
-        $project = auth()->user()->projects()->create(
-            factory(Project::class)->raw()
-        );
+        $project = ProjectFactory::create();
 
         $attributes = factory('App\Project')->raw(['body' => '']);
 
-        $this->post($project->path() . '/tasks', $attributes)->assertSessionHasErrors('body');
+        $this->actingAs($project->owner)
+            ->post($project->path() . '/tasks', $attributes)
+            ->assertSessionHasErrors('body');
     }
 }

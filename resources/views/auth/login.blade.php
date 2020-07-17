@@ -2,19 +2,18 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+    <div class="w-2/4 m-auto mt-6">
             <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+                <div class="text-4xl font-bold mb-3">{{ __('Login') }}</div>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}" class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                <div class="">
+                    <form method="POST" action="{{ route('login') }}" class="bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4">
                         @csrf
 
                         <div class="form-group row">
-                            <label for="email" class="block text-gray-700 text-sm font-bold mb-2">{{ __('E-Mail Address') }}</label>
+                            <label for="email" class="block text-gray-700 text-xl font-bold mb-2">{{ __('E-Mail Address') }}</label>
 
-                            <div class="col-md-6">
+                            <div class="mb-4">
                                 <input id="email" type="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
 
                                 @error('email')
@@ -26,7 +25,7 @@
                         </div>
 
                         <div class="form-group row">
-                            <label for="password" class="block text-gray-700 text-sm font-bold mb-2">{{ __('Password') }}</label>
+                            <label for="password" class="block text-gray-700 text-xl font-bold mb-2">{{ __('Password') }}</label>
 
                             <div class="col-md-6">
                                 <input id="password" type="password" class="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
@@ -67,7 +66,7 @@
                     </form>
                 </div>
             </div>
-        </div>
+
     </div>
 </div>
 @endsection

@@ -2,31 +2,16 @@
 
 @section('content')
     
-  <form method="POST" action="/projects" class="container">
-    @csrf
-
-    <h1 class="heading is-1">Create a Project</h1>
-
-    <div class="field">
-      <label class="label" for="title">Title</label>
-      <div class="control">
-        <input type="text" class="input" name="title" placeholder="Title">
-      </div>
-    </div>
-  
-    <div class="field">
-      <label class="label" for="title">Description</label>
-      <div class="control">
-        <textarea name="description" class="textarea" ></textarea>
-      </div>
-    </div>
-  
-    <div class="field">
-      <div class="control">
-        <button type="submit" class="button is-link">Create project</button>
-        <a href="/projects">Cancle</a>
-      </div>
-    </div>
-  </form>
+  <div class="container">
+    <h1 class="font-bold text-4xl m-auto w-2/4">Let's start something news!</h1>
+    <form method="POST" 
+      action="/projects" 
+      class="w-2/4 m-auto mt-6 bg-gray-100 shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        @include('projects.form', [
+          'project' => new App\Project,
+          'buttonText' => 'Create Project'
+        ])
+    </form>
+  </div>
 
 @endsection

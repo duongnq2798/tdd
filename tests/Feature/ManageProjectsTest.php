@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Project;
+use Facades\Tests\Setup\ProjectFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -17,8 +18,10 @@ class ManageProjectsTest extends TestCase
         $project = factory('App\Project')->create();
 
         $this->get('/projects')->assertRedirect('login');
+        $this->get('/projects/create')->assertRedirect('login');
+        $this->get($project->path().'/edit')->assertRedirect('login');
         $this->get($project->path())->assertRedirect('login');
-        $this->post('projects', $project->toArray())->assertRedirect('login');
+        $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
 
     /** @test */
@@ -26,7 +29,7 @@ class ManageProjectsTest extends TestCase
     public function a_user_can_create_a_project()
     {
         $this->signIn();
-        // $this->actingAs(factory('App\User')->create());
+
         $this->get('/projects/create')->assertStatus(200);
         $attributes = [
             'title' => $this->faker->sentence,
@@ -38,42 +41,38 @@ class ManageProjectsTest extends TestCase
 
         $response->assertRedirect($project->path());
 
-        $this->assertDatabaseHas('projects', $attributes);
-
         $this->get($project->path())
             ->assertSee($attributes['title'])
             ->assertSee($attributes['description'])
             ->assertSee($attributes['notes']);
     }
+
     /** @test */
     // Người dùng có thể cập nhật project
     public function a_user_can_update_a_project()
     {
-        $this->signIn();
+        $project = ProjectFactory::create();
 
-        $this->withoutExceptionHandling();
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $attributes = ['title' => 'Changed', 'description' => 'Changed', 'notes' => 'Changed'])
+            ->assertRedirect($project->path());
+        $this->get($project->path() . '/edit')->assertOk();
 
-        $project = factory('App\Project')->create(['owner_id' => auth()->id()]);
-
-        $this->patch($project->path(), [
-            'notes' => 'Changed',
-        ])->assertRedirect($project->path());
-
-        $this->assertDatabaseHas('projects', ['notes' => 'Changed']);
+        $this->assertDatabaseHas('projects', $attributes);
     }
 
     /** @test */
     // Một người dùng có thể xem dự án của họ
-    public function a_user_can_view_their_project()
-    {
-        $this->signIn();
-        $this->withoutExceptionHandling();
-        $project = factory('App\Project')->create(['owner_id' => auth()->id()]);
+   /** @test */
+   public function a_user_can_view_their_project()
+   {
+       $project = ProjectFactory::create();
 
-        $this->get($project->path())
-            ->assertSee($project->title)
-            ->assertSee($project->description);
-    }
+       $this->actingAs($project->owner)
+           ->get($project->path())
+           ->assertSee($project->title);
+        //    ->assertSee($project->description)
+   }
 
     /** @test */
     // Một người dùng xác thực không thể xem các dự án của người khác

@@ -1,6 +1,7 @@
-<div class="border-indigo-100 mr-4 p-5 rounded-lg shadow-lg" style="height: 200px; overflow:hidden">
-    <h1 class="font-bold text-blue-300 text-xl mb-6 -ml-5 border-l-4 border-blue-400 pl-4"> 
+<div class="rounded overflow-hidden shadow-lg pt-3 pl-3 rounded-lg " 
+   style="height: 200px; overflow:hidden; background-color: #fbd46d">
+    <h1 class="font-bold text-xl mb-2 text-white"> 
       <a href=" {{$project->path()}} "> {{$project->title}} </a>
     </h1>
-    <div class=" mt-3"> {{ Str::limit($project->description)}} </div>
+    <div class="text-white text-base"> {{ Str::limit($project->description)}} </div>
 </div>
