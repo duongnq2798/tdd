@@ -12,4 +12,13 @@ class Activity extends Model
      * @var array
      */
     protected $guarded = [];
+
+    protected $casts = [
+        'changes' => 'array'
+    ];
+
+    public function subject()
+    {
+        return $this->morphTo();
+    }
 }

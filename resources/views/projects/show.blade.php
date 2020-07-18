@@ -54,7 +54,7 @@
               style="min-height: 200px" 
               placeholder="Note here..."
               >{{ $project->notes }}</textarea>
-            <button type="submit" class="button bg-blue-300 shadow-lg py-3 px-8 mt-5 rounded-md">Save</button>
+            <button type="submit" class="button bg-blue-300 shadow-lg py-3 px-8 mt-5 rounded-md mb-5">Save</button>
           </form>
 
           @include ('projects.errors')

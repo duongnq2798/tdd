@@ -51,6 +51,7 @@ class ManageProjectsTest extends TestCase
     // Người dùng có thể cập nhật project
     public function a_user_can_update_a_project()
     {
+        $this->withoutExceptionHandling();
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
@@ -77,20 +78,19 @@ class ManageProjectsTest extends TestCase
     /** @test */
     public function a_user_can_view_their_project()
     {
+        $this->withoutExceptionHandling();
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
             ->get($project->path())
             ->assertSee($project->title);
-        //    ->assertSee($project->description)
+        // ->assertSee($project->description);
     }
 
     /** @test */
     // Một người dùng xác thực không thể xem các dự án của người khác
     public function an_authenticated_user_cannnot_view_the_projects_of_others()
     {
-        // $this->be(factory('App\User')->create());
-        // $this->withoutExceptionHandling();
         $this->signIn();
         $project = factory('App\Project')->create();
         $this->get($project->path())->assertStatus(403);
