@@ -36,10 +36,4 @@
     </div>
   </div>
 
-  @if ($errors->any())
-      <div class="field mt-">
-        @foreach ($errors->all() as $error)
-            <li class="text-sm text-red-700"> {{ $error }} </li>
-        @endforeach
-      </div>
-  @endif
+  @include ('projects.errors')

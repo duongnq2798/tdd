@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateProjectRequest;
 use App\Project;
 use Illuminate\Http\Request;
 
@@ -28,6 +29,10 @@ class ProjectsController extends Controller
     public function store()
     {
         $project = auth()->user()->projects()->create($this->validateRequest());
+
+        if ($tasks = request('tasks')) {
+            $project->addTasks($tasks);
+        }
 
         return redirect($project->path());
     }

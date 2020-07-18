@@ -19,7 +19,7 @@ class ManageProjectsTest extends TestCase
 
         $this->get('/projects')->assertRedirect('login');
         $this->get('/projects/create')->assertRedirect('login');
-        $this->get($project->path().'/edit')->assertRedirect('login');
+        $this->get($project->path() . '/edit')->assertRedirect('login');
         $this->get($project->path())->assertRedirect('login');
         $this->post('/projects', $project->toArray())->assertRedirect('login');
     }
@@ -62,17 +62,28 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test */
-    // Một người dùng có thể xem dự án của họ
-   /** @test */
-   public function a_user_can_view_their_project()
-   {
-       $project = ProjectFactory::create();
+    function a_user_can_update_a_projects_general_notes()
+    {
+        $project = ProjectFactory::create();
 
-       $this->actingAs($project->owner)
-           ->get($project->path())
-           ->assertSee($project->title);
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $attributes = ['notes' => 'Changed']);
+
+        $this->assertDatabaseHas('projects', $attributes);
+    }
+
+    /** @test */
+    // Một người dùng có thể xem dự án của họ
+    /** @test */
+    public function a_user_can_view_their_project()
+    {
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
+            ->get($project->path())
+            ->assertSee($project->title);
         //    ->assertSee($project->description)
-   }
+    }
 
     /** @test */
     // Một người dùng xác thực không thể xem các dự án của người khác
