@@ -3,24 +3,36 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 
 class Task extends Model
 {
+    use RecordsActivity;
+
     protected $guarded = [];
 
+    /**
+     * The relationships that should be touched on save.
+     *
+     * @var array
+     */
     protected $touches = ['project'];
 
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
     protected $casts = [
         'completed' => 'boolean'
     ];
 
-    /**
+     /**
      * Model events that should trigger new activity.
      * 
      * @var array
      */
-    // protected static $recordableEvents = ['created', 'deleted'];
-
+    protected static $recordableEvents = ['created', 'deleted'];
 
     /**
      * Mark the task as complete.
@@ -59,16 +71,16 @@ class Task extends Model
         return "/projects/{$this->project->id}/tasks/{$this->id}";
     }
 
-    public function recordActivity($description)
+
+    protected function activityChanges()
     {
-        $this->activity()->create([
-            'project_id' => $this->project_id,
-            'description' => $description
-        ]);
+        return null;
+        if ($this->wasChanged()) {
+            return [
+                'before' => Arr::except(array_diff($this->old, $this->getAttributes()), 'updated_at'),
+                'after' => Arr::except($this->getChanges(), 'updated_at')
+            ];
+        }
     }
 
-    public function activity()
-    {
-        return $this->morphMany(Activity::class, 'subject')->latest();
-    }
 }

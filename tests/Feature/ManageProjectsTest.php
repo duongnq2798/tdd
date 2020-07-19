@@ -48,6 +48,45 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test */
+    // Người dùng trái phép không thể xóa một dự án
+    function unauthorized_users_cannot_delete_a_projects()
+    {
+        $project = ProjectFactory::create();
+
+        $this->delete($project->path())
+            ->assertRedirect('/login');
+
+        $this->signIn();
+        $this->delete($project->path())->assertStatus(403);
+    }
+
+    /** @test */
+    // Guests không thể xoá một project
+    function guests_cannot_delete_a_projects()
+    {
+        $project = ProjectFactory::create();
+
+        $this->delete($project->path())
+            ->assertRedirect('/login');
+
+        $this->signIn();
+        $this->delete($project->path())->assertStatus(403);
+    }
+
+    /** @test */
+    // Một người dùng có thể xoá một project
+    function a_user_can_delete_a_project()
+    {
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
+            ->delete($project->path())
+            ->assertRedirect('/projects');
+
+        $this->assertDatabaseMissing('projects', $project->only('id'));
+    }
+
+    /** @test */
     // Người dùng có thể cập nhật project
     public function a_user_can_update_a_project()
     {
@@ -63,6 +102,7 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test */
+    // Một người dùng có thể cập nhật một ghi chú chung của dự án
     function a_user_can_update_a_projects_general_notes()
     {
         $project = ProjectFactory::create();
@@ -88,7 +128,7 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test */
-    // Một người dùng xác thực không thể xem các dự án của người khác
+    // Một người dùng trái phép không thể xem các dự án của người khác
     public function an_authenticated_user_cannnot_view_the_projects_of_others()
     {
         $this->signIn();
@@ -97,7 +137,7 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test */
-    // Một người dùng xác thực không thể cập nhật các dự án của người khác
+    // Một người dùng trái phép không thể cập nhật các dự án của người khác
     public function an_authenticated_user_cannnot_update_the_projects_of_others()
     {
         // $this->be(factory('App\User')->create());

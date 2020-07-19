@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DateTimeInterface;
-use Illuminate\Support\Arr;
 
 class Project extends Model
 {
+    use RecordsActivity;
     /**
      * Attributes to guard against mass assignment.
      * Thuộc tính để bảo vệ chống phân công hàng loạt
@@ -16,7 +16,6 @@ class Project extends Model
      */
     protected $guarded = [];
 
-    public $old = [];
 
     /**
      *  The path to the project.
@@ -27,8 +26,6 @@ class Project extends Model
     {
         return "/projects/{$this->id}";
     }
-
-
     /**
      * The owner of the project.
      *
@@ -42,15 +39,13 @@ class Project extends Model
 
     /**
      * The tasks associated with the project.
-     * Các nhiệm vụ liên quan đến dự án.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function tasks()
     {
         return $this->hasMany(Task::class);
     }
-
-
     /**
      * Add a task to the project.
      *
@@ -61,30 +56,6 @@ class Project extends Model
     {
         return $this->tasks()->create(compact('body'));
     }
-
-    /**
-     * Record activity for a project.
-     *
-     * @param string $type
-     */
-    public function recordActivity($description)
-    {
-        $this->activity()->create([
-            'description' => $description,
-            'changes' => $this->activityChanges($description)
-        ]);
-    }
-
-    protected function activityChanges($description)
-    {
-        if ($description == 'updated') {
-            return [
-                'before' => Arr::except(array_diff($this->old, $this->getAttributes()), 'updated_at'),
-                'after' => Arr::except($this->getChanges(), 'updated_at')
-            ];
-        }
-    }
-
     /**
      * Fix bug hai array không bằng nhau do khác Date function
      * https://laravel.com/docs/7.x/upgrade#date-serialization
@@ -94,15 +65,5 @@ class Project extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
-    }
-
-    /**
-     * The activity feed for the project.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function activity()
-    {
-        return $this->hasMany(Activity::class)->latest();
     }
 }
