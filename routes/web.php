@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Auth\AuthenticationException;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -21,6 +20,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('/projects/{project}/tasks', 'ProjectTasksController@store');
     Route::patch('/projects/{project}/tasks/{task}', 'ProjectTasksController@update');
+
+    Route::post('projects/{project}/invitations', 'ProjectInvitationsController@store');
 
     Route::get('/home', 'HomeController@index')->name('home');
 });

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use DateTimeInterface;
+use PDO;
 
 class Project extends Model
 {
@@ -56,6 +57,7 @@ class Project extends Model
     {
         return $this->tasks()->create(compact('body'));
     }
+
     /**
      * Fix bug hai array không bằng nhau do khác Date function
      * https://laravel.com/docs/7.x/upgrade#date-serialization
@@ -65,5 +67,25 @@ class Project extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * Invite a user to the project.
+     *
+     * @param \App\User $user
+     */
+    public function invite(User $user)
+    {
+        $this->members()->attach($user);
+    }
+
+    /**
+     * Get all members that are assigned to the team.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function members()
+    {
+        return $this->belongsToMany(User::class, 'project_members')->withTimestamps();
     }
 }

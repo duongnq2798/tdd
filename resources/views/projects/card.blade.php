@@ -5,6 +5,7 @@
     </h1>
     <div class="text-white text-base mb-4"> {{ Str::limit($project->description)}} </div>
 
+    @can('manage', $project)
     <footer class="absolute bottom-0 right-0 mr-5 mb-4">
       <form method="POST" action=" {{ $project->path() }} " class="">
         @csrf
@@ -14,4 +15,6 @@
         </button>
       </form>
     </footer>
+    @endcan
+    
 </div>
