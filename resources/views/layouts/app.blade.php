@@ -19,13 +19,14 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
-<body style=" background: #f7f5dd;">
+<body style="background: #ebebeb">
     <div id="app">
-        <nav class="bg-gray-100 ">
+        <nav style="background: #e3dfc8">
             <div class="container mx-auto">
              <div class="flex justify-between items-center py-4">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    <img class="w-16 h-10" src="/img/marvel.svg">
+                <a class="navbar-brand flex items-center" href="{{ url('/') }}">
+                    <img class="w-16 h-10" src="/img/presentation.svg">
+                    <h2 class="font-semibold">Manage Your Project</h2>
                 </a>
 
                 <div >
@@ -45,7 +46,7 @@
                         @else
                             <li class="flex ">
                                 <a id="navbarDropdown" class="text-white py-2 px-6 bg-blue-500 mr-2 rounded-lg" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                  Welcome,   {{ Auth::user()->name }} <span class="caret"></span>
+                                  {{ Auth::user()->name }} <span class="caret"></span>
                                 </a>
 
                                 <div class="py-2 px-6 bg-red-300 rounded-lg" aria-labelledby="navbarDropdown">

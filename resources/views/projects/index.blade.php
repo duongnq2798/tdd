@@ -4,7 +4,12 @@
   <div class="flex items-center mb-4">
     <div class="flex justify-between items-center w-full">
       <h2 class="font-bold text-3xl ">Projects</h2>
-      <a class="button bg-blue-400 text-white py-2 px-6 rounded-md shadow-md font-medium" href="/projects/create">New Project</a>
+      <a 
+        class="button bg-blue-400 text-white py-2 px-6 rounded-md shadow-md font-medium" 
+        href="/projects/create" 
+        @click.prevent="$modal.show('new-project')">
+      New Project
+    </a>
     </div>
   </div>
 
@@ -17,6 +22,8 @@
           <div class="button">No Project yet.</div>
     @endforelse
   </main>
+
+  <new-project-modal></new-project-modal>
 
 @endsection
  

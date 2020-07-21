@@ -85,6 +85,7 @@
 
         @can ('manage', $project)      
             @include('projects.invite')
+            @include ('projects.errors', ['bag' => 'invitations'])
         @endcan
 
       </div>

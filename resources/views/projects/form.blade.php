@@ -5,7 +5,7 @@
     <label class="block text-gray-700 font-bold mb-2 text-2xl" for="title">Title</label>
     <div class="control">
       <input type="text" 
-      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+      class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none " 
       name="title" 
       placeholder="Title"
       required
@@ -19,7 +19,7 @@
     <div class="control">
       <textarea 
         name="description" 
-        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+        class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none" 
         placeholder="Write here..." 
         style="min-height: 200px">{{ $project->description }}</textarea>
     </div>

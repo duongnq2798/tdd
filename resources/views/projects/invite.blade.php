@@ -1,12 +1,12 @@
 <div class=" overflow-hidden shadow-lg pt-3 pl-3 rounded-lg" 
-          style="min-height: 160px;overflow:hidden; background-color: #fbd46d">
+          style="min-height: 160px;overflow:hidden; background-color:   #e8505b">
             <h3 class="font-bold text-2xl mb-2 text-white"> 
               Invite a User
             </h3>
               <form method="POST" action=" {{ $project->path() . '/invitations'}} " class="relative">
                 @csrf
                 <div class="mb-3 mr-2">
-                  <input type="email" name="email" class="border border-green-100 rounded-full w-full py-2 px-3" placeholder="Email Address">
+                  <input type="email" name="email" class="border border-green-100 rounded-full w-full py-2 px-3 focus:outline-none" placeholder="Email Address">
                 </div>
                 <button 
                 class="bg-red-500 hover:bg-red-400 text-white text-xs 
