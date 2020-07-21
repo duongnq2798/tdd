@@ -18,6 +18,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="shortcut icon" href="/img/logomarvel.png" type="image/x-icon">
 </head>
 <body style="background: #ebebeb">
     <div id="app">
@@ -25,7 +26,7 @@
             <div class="container mx-auto">
              <div class="flex justify-between items-center py-4">
                 <a class="navbar-brand flex items-center" href="{{ url('/') }}">
-                    <img class="w-16 h-10" src="/img/presentation.svg">
+                    <img class="w-13 h-8 mr-2" src="/img/logomarvel.png">
                     <h2 class="font-semibold">Manage Your Project</h2>
                 </a>
 
